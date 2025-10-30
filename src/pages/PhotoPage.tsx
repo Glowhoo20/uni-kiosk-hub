@@ -29,6 +29,7 @@ export default function PhotoPage() {
   const [countdown, setCountdown] = useState(0);
   const [videoAspectRatio, setVideoAspectRatio] = useState<number | null>(null);
   const [frameAspectRatio, setFrameAspectRatio] = useState<number | null>(null);
+  const [isSharing, setIsSharing] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // Countdown timer effect
@@ -261,6 +262,7 @@ export default function PhotoPage() {
   const saveAndSharePhoto = async () => {
     if (previewImage && photoFrames.length > 0) {
       try {
+        setIsSharing(true);
         // 5 dakika sonra expire olacak tarih
         const expiresAt = new Date();
         expiresAt.setMinutes(expiresAt.getMinutes() + 5);
@@ -283,9 +285,11 @@ export default function PhotoPage() {
         // QR kod için URL oluştur
         const shareUrl = `${window.location.origin}/shared-photo?id=${data.id}`;
         setShareableImageUrl(shareUrl);
+        setIsSharing(false);
         setShowQR(true);
       } catch (error) {
         console.error('Error saving and sharing photo:', error);
+        setIsSharing(false);
         alert('Fotoğraf kaydedilip paylaşılırken hata oluştu');
       }
     }
@@ -492,6 +496,21 @@ export default function PhotoPage() {
           </div>
         </div>
       </div>
+
+      {/* Loading Dialog */}
+      <Dialog open={isSharing} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+          <div className="flex flex-col items-center space-y-4 py-8">
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            <p className="text-xl font-semibold text-primary">
+              Fotoğraf Paylaşılıyor...
+            </p>
+            <p className="text-sm text-muted-foreground text-center">
+              QR kod oluşturuluyor, lütfen bekleyin
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* QR Code Dialog */}
       <Dialog open={showQR} onOpenChange={setShowQR}>
