@@ -477,7 +477,8 @@ export default function PhotoPage() {
                 <Button
                   onClick={savePhoto}
                   size="sm"
-                  className="bg-accent hover:bg-accent-hover text-xs px-3 py-3"
+                  variant="outline"
+                  className="text-xs px-3 py-3"
                 >
                   <Download className="w-3 h-3 mr-1" />
                   Kaydet
