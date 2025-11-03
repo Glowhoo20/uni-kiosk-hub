@@ -486,8 +486,7 @@ export default function PhotoPage() {
                 <Button
                   onClick={saveAndSharePhoto}
                   size="sm"
-                  variant="outline"
-                  className="text-xs px-3 py-3"
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary-hover hover:to-accent-hover text-xs px-3 py-3"
                 >
                   <Share2 className="w-3 h-3 mr-1" />
                   Kaydet ve Paylaş
