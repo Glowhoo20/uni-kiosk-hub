@@ -191,37 +191,6 @@ export default function PhotoPage() {
     }
   };
 
-  const compressImage = (dataUrl: string, quality: number = 0.7, maxWidth: number = 1200): Promise<string> => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Maksimum genişliğe göre boyutlandır
-        let width = img.width;
-        let height = img.height;
-        
-        if (width > maxWidth) {
-          height = (height * maxWidth) / width;
-          width = maxWidth;
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
-        
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          // JPEG formatında daha küçük boyut
-          resolve(canvas.toDataURL('image/jpeg', quality));
-        } else {
-          resolve(dataUrl);
-        }
-      };
-      img.src = dataUrl;
-    });
-  };
-
   const applyFrameOverlay = (context: CanvasRenderingContext2D, width: number, height: number): Promise<void> => {
     return new Promise((resolve) => {
       const currentFrameData = photoFrames[currentFrame];
@@ -262,14 +231,39 @@ export default function PhotoPage() {
   const savePhoto = async () => {
     if (previewImage && photoFrames.length > 0) {
       try {
-        // Tüm fotoğraflar 5 dakika sonra silinecek
-        const expiresAt = new Date();
-        expiresAt.setMinutes(expiresAt.getMinutes() + 5);
+        // Base64'ü blob'a çevir
+        const base64Data = previewImage.split(',')[1];
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/png' });
         
+        // Benzersiz dosya adı oluştur
+        const fileName = `public/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+        
+        // Storage'a yükle
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('saved-photos')
+          .upload(fileName, blob, {
+            contentType: 'image/png',
+            cacheControl: '300' // 5 dakika cache
+          });
+
+        if (uploadError) throw uploadError;
+        
+        // Public URL'yi al
+        const { data: { publicUrl } } = supabase.storage
+          .from('saved-photos')
+          .getPublicUrl(fileName);
+        
+        // Veritabanına kaydet
         const { error } = await supabase
           .from('saved_photos')
           .insert({
-            image_data: previewImage,
+            image_data: publicUrl,
             frame_name: photoFrames[currentFrame]?.name || 'DEÜ Klasik',
             frame_id: photoFrames[currentFrame]?.id || null,
           });
@@ -295,17 +289,43 @@ export default function PhotoPage() {
       try {
         setIsSharing(true);
         
-        // Fotoğrafı sıkıştır (daha hızlı yükleme için)
-        const compressedImage = await compressImage(previewImage, 0.7, 1200);
+        // Base64'ü blob'a çevir
+        const base64Data = previewImage.split(',')[1];
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/png' });
+        
+        // Benzersiz dosya adı oluştur
+        const fileName = `public/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+        
+        // Storage'a yükle
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('saved-photos')
+          .upload(fileName, blob, {
+            contentType: 'image/png',
+            cacheControl: '300' // 5 dakika cache
+          });
+
+        if (uploadError) throw uploadError;
+        
+        // Public URL'yi al
+        const { data: { publicUrl } } = supabase.storage
+          .from('saved-photos')
+          .getPublicUrl(fileName);
         
         // 5 dakika sonra expire olacak tarih
         const expiresAt = new Date();
         expiresAt.setMinutes(expiresAt.getMinutes() + 5);
         
+        // Veritabanına sadece URL'yi kaydet (çok daha hızlı)
         const { data, error } = await supabase
           .from('saved_photos')
           .insert({
-            image_data: compressedImage,
+            image_data: publicUrl, // Artık URL saklanıyor
             frame_name: photoFrames[currentFrame]?.name || 'DEÜ Klasik',
             frame_id: photoFrames[currentFrame]?.id || null,
             shared_at: new Date().toISOString(),

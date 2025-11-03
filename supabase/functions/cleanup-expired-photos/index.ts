@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
 
     const { data: expiredPhotos, error: selectError } = await supabase
       .from('saved_photos')
-      .select('id')
+      .select('id, image_data')
       .lt('created_at', fiveMinutesAgo.toISOString());
 
     if (selectError) {
@@ -36,6 +36,31 @@ Deno.serve(async (req) => {
     if (expiredPhotos && expiredPhotos.length > 0) {
       console.log(`Found ${expiredPhotos.length} expired photos to delete`);
 
+      // Storage'dan dosyaları sil
+      const filesToDelete: string[] = [];
+      for (const photo of expiredPhotos) {
+        // URL'den dosya yolunu çıkar
+        if (photo.image_data && photo.image_data.includes('saved-photos')) {
+          const urlParts = photo.image_data.split('saved-photos/');
+          if (urlParts.length > 1) {
+            filesToDelete.push(urlParts[1]);
+          }
+        }
+      }
+
+      if (filesToDelete.length > 0) {
+        console.log(`Deleting ${filesToDelete.length} files from storage...`);
+        const { error: storageError } = await supabase.storage
+          .from('saved-photos')
+          .remove(filesToDelete);
+
+        if (storageError) {
+          console.error('Error deleting files from storage:', storageError);
+          // Storage silme hatası olsa bile veritabanı kaydını sil
+        }
+      }
+
+      // Veritabanından kayıtları sil
       const { error: deleteError } = await supabase
         .from('saved_photos')
         .delete()
