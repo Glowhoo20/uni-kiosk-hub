@@ -231,39 +231,14 @@ export default function PhotoPage() {
   const savePhoto = async () => {
     if (previewImage && photoFrames.length > 0) {
       try {
-        // Base64'ü blob'a çevir
-        const base64Data = previewImage.split(',')[1];
-        const byteCharacters = atob(base64Data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/png' });
+        // Tüm fotoğraflar 5 dakika sonra silinecek
+        const expiresAt = new Date();
+        expiresAt.setMinutes(expiresAt.getMinutes() + 5);
         
-        // Benzersiz dosya adı oluştur
-        const fileName = `public/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
-        
-        // Storage'a yükle
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('saved-photos')
-          .upload(fileName, blob, {
-            contentType: 'image/png',
-            cacheControl: '300' // 5 dakika cache
-          });
-
-        if (uploadError) throw uploadError;
-        
-        // Public URL'yi al
-        const { data: { publicUrl } } = supabase.storage
-          .from('saved-photos')
-          .getPublicUrl(fileName);
-        
-        // Veritabanına kaydet
         const { error } = await supabase
           .from('saved_photos')
           .insert({
-            image_data: publicUrl,
+            image_data: previewImage,
             frame_name: photoFrames[currentFrame]?.name || 'DEÜ Klasik',
             frame_id: photoFrames[currentFrame]?.id || null,
           });
@@ -288,44 +263,14 @@ export default function PhotoPage() {
     if (previewImage && photoFrames.length > 0) {
       try {
         setIsSharing(true);
-        
-        // Base64'ü blob'a çevir
-        const base64Data = previewImage.split(',')[1];
-        const byteCharacters = atob(base64Data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/png' });
-        
-        // Benzersiz dosya adı oluştur
-        const fileName = `public/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
-        
-        // Storage'a yükle
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('saved-photos')
-          .upload(fileName, blob, {
-            contentType: 'image/png',
-            cacheControl: '300' // 5 dakika cache
-          });
-
-        if (uploadError) throw uploadError;
-        
-        // Public URL'yi al
-        const { data: { publicUrl } } = supabase.storage
-          .from('saved-photos')
-          .getPublicUrl(fileName);
-        
         // 5 dakika sonra expire olacak tarih
         const expiresAt = new Date();
         expiresAt.setMinutes(expiresAt.getMinutes() + 5);
         
-        // Veritabanına sadece URL'yi kaydet (çok daha hızlı)
         const { data, error } = await supabase
           .from('saved_photos')
           .insert({
-            image_data: publicUrl, // Artık URL saklanıyor
+            image_data: previewImage,
             frame_name: photoFrames[currentFrame]?.name || 'DEÜ Klasik',
             frame_id: photoFrames[currentFrame]?.id || null,
             shared_at: new Date().toISOString(),
