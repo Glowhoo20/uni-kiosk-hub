@@ -191,6 +191,37 @@ export default function PhotoPage() {
     }
   };
 
+  const compressImage = (dataUrl: string, quality: number = 0.7, maxWidth: number = 1200): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Maksimum genişliğe göre boyutlandır
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          // JPEG formatında daha küçük boyut
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        } else {
+          resolve(dataUrl);
+        }
+      };
+      img.src = dataUrl;
+    });
+  };
+
   const applyFrameOverlay = (context: CanvasRenderingContext2D, width: number, height: number): Promise<void> => {
     return new Promise((resolve) => {
       const currentFrameData = photoFrames[currentFrame];
@@ -263,6 +294,10 @@ export default function PhotoPage() {
     if (previewImage && photoFrames.length > 0) {
       try {
         setIsSharing(true);
+        
+        // Fotoğrafı sıkıştır (daha hızlı yükleme için)
+        const compressedImage = await compressImage(previewImage, 0.7, 1200);
+        
         // 5 dakika sonra expire olacak tarih
         const expiresAt = new Date();
         expiresAt.setMinutes(expiresAt.getMinutes() + 5);
@@ -270,7 +305,7 @@ export default function PhotoPage() {
         const { data, error } = await supabase
           .from('saved_photos')
           .insert({
-            image_data: previewImage,
+            image_data: compressedImage,
             frame_name: photoFrames[currentFrame]?.name || 'DEÜ Klasik',
             frame_id: photoFrames[currentFrame]?.id || null,
             shared_at: new Date().toISOString(),
