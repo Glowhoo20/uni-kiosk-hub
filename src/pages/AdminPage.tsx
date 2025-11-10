@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AnnouncementsManager } from '@/components/admin/AnnouncementsManager';
@@ -10,13 +10,33 @@ import SavedPhotosManager from '@/components/admin/SavedPhotosManager';
 import FacultyImporter from '@/components/admin/FacultyImporter';
 import ProtectedRoute from '@/components/ProtectedRoute'; // Yeni komponenti import ediyoruz
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import MapManager from '@/components/admin/MapManager';
+import { Camera } from 'lucide-react';
 
 // Mevcut AdminPage içeriğinizi ayrı bir komponente taşıyoruz
 const AdminPanelContent = () => {
   const [activeTab, setActiveTab] = useState('announcements');
+  const [totalPhotos, setTotalPhotos] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchPhotoCount();
+  }, []);
+
+  const fetchPhotoCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('saved_photos')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) throw error;
+      setTotalPhotos(count || 0);
+    } catch (error) {
+      console.error('Error fetching photo count:', error);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -33,6 +53,23 @@ const AdminPanelContent = () => {
           </div>
           <Button onClick={handleLogout} variant="outline">Çıkış Yap</Button>
         </div>
+
+        <Card className="mb-6">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-medium text-muted-foreground">İstatistikler</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10">
+                <Camera className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-foreground">{totalPhotos}</p>
+                <p className="text-sm text-muted-foreground">Toplam Çekilen Fotoğraf</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-6">
