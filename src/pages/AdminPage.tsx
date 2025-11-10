@@ -27,12 +27,13 @@ const AdminPanelContent = () => {
 
   const fetchPhotoCount = async () => {
     try {
-      const { count, error } = await supabase
-        .from('saved_photos')
-        .select('*', { count: 'exact', head: true });
+      const { data, error } = await supabase
+        .from('photo_statistics')
+        .select('total_photos_taken')
+        .single();
 
       if (error) throw error;
-      setTotalPhotos(count || 0);
+      setTotalPhotos(data?.total_photos_taken || 0);
     } catch (error) {
       console.error('Error fetching photo count:', error);
     }
