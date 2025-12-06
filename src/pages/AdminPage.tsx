@@ -8,14 +8,14 @@ import { ScheduleManager } from '@/components/admin/ScheduleManager';
 import FrameManager from '@/components/admin/FrameManager';
 import SavedPhotosManager from '@/components/admin/SavedPhotosManager';
 import FacultyImporter from '@/components/admin/FacultyImporter';
-import ProtectedRoute from '@/components/ProtectedRoute'; // Yeni komponenti import ediyoruz
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import MapManager from '@/components/admin/MapManager';
-import { Camera } from 'lucide-react';
+import { NewYearManager } from '@/components/admin/NewYearManager';
+import { Camera, Sparkles } from 'lucide-react';
 
-// Mevcut AdminPage içeriğinizi ayrı bir komponente taşıyoruz
 const AdminPanelContent = () => {
   const [activeTab, setActiveTab] = useState('announcements');
   const [totalPhotos, setTotalPhotos] = useState(0);
@@ -73,7 +73,7 @@ const AdminPanelContent = () => {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="announcements">Duyurular</TabsTrigger>
             <TabsTrigger value="surveys">Anketler</TabsTrigger>
             <TabsTrigger value="faculty">Öğretim Üyeleri</TabsTrigger>
@@ -81,6 +81,7 @@ const AdminPanelContent = () => {
             <TabsTrigger value="frames">Çerçeveler</TabsTrigger>
             <TabsTrigger value="map">Harita</TabsTrigger>
             <TabsTrigger value="photos">Fotoğraflar</TabsTrigger>
+            <TabsTrigger value="yeniyil" className="flex gap-2"><Sparkles className="w-4 h-4" /> Yeniyıl</TabsTrigger>
           </TabsList>
 
           <TabsContent value="announcements" className="space-y-4">
@@ -105,13 +106,15 @@ const AdminPanelContent = () => {
           <TabsContent value="map" className="space-y-4">
             <MapManager />
           </TabsContent>
+          <TabsContent value="yeniyil" className="space-y-4">
+            <NewYearManager />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
   );
 };
 
-// Sayfanın kendisi artık ProtectedRoute ile sarmalanmış olacak
 const AdminPage = () => {
   return (
     <ProtectedRoute>

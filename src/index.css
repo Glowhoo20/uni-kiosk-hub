@@ -22,7 +22,7 @@ All colors MUST be HSL.
     --primary: 214 95% 15%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 214 95% 20%;
-    
+
     /* Light Blue Accent */
     --secondary: 207 90% 95%;
     --secondary-foreground: 214 95% 15%;
@@ -50,12 +50,12 @@ All colors MUST be HSL.
     --content-padding: 2rem;
     --kiosk-shadow: 0 10px 30px -10px hsl(214 95% 15% / 0.2);
     --kiosk-shadow-lg: 0 20px 50px -10px hsl(214 95% 15% / 0.3);
-    
+
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(214 95% 15%), hsl(207 90% 20%));
     --gradient-accent: linear-gradient(135deg, hsl(207 90% 54%), hsl(214 95% 25%));
     --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(207 90% 98%));
-    
+
     --radius: 1rem;
 
     --sidebar-background: 0 0% 98%;
@@ -112,6 +112,56 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
+  /* New Year Theme - Cozy Dark Window View */
+  .new-year-theme {
+    /* Transparent Background to show the Window Scene */
+    --background: 0 0% 0% / 0;
+    /* Transparent */
+    --foreground: 0 0% 100%;
+    /* White Text */
+
+    /* Semi-transparent Cards to show background blur */
+    --card: 222.2 84% 4.9% / 0.7;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 222.2 84% 4.9% / 0.9;
+    --popover-foreground: 0 0% 100%;
+
+    /* Warm Red/Gold Primary */
+    --primary: 354 70% 54%;
+    /* #D42E3E */
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 354 70% 45%;
+
+    /* Green Accent */
+    --secondary: 142 76% 36%;
+    /* #16A34A */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 142 76% 30%;
+
+    /* Muted for Dark Theme */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    /* Gold Accent */
+    --accent: 45 93% 47%;
+    /* #F59E0B */
+    --accent-foreground: 0 0% 100%;
+    --accent-hover: 45 93% 40%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 100% / 0.2;
+    --input: 0 0% 100% / 0.2;
+    --ring: 354 70% 54%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(354 70% 54%), hsl(354 70% 40%));
+    --gradient-accent: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 25%));
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  }
 }
 
 @layer base {
@@ -151,13 +201,18 @@ All colors MUST be HSL.
   }
 
   /* Prevent double-tap zoom */
-  a, button, input, textarea, select {
+  a,
+  button,
+  input,
+  textarea,
+  select {
     touch-action: manipulation !important;
     -ms-touch-action: manipulation !important;
   }
 
   /* Prevent text selection in kiosk mode */
-  body, body * {
+  body,
+  body * {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -166,10 +221,27 @@ All colors MUST be HSL.
   }
 
   /* Allow selection in inputs */
-  input, textarea {
+  input,
+  textarea {
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
   }
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-20px) translateX(0);
+  }
+
+  100% {
+    transform: translateY(100vh) translateX(20px);
+  }
+}
+
+.animate-fall {
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }

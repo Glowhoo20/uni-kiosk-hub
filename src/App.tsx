@@ -15,34 +15,53 @@ import SurveysPage from "./pages/SurveysPage";
 import SurveyDetailPage from "./pages/SurveyDetailPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminPage from "./pages/AdminPage";
+
+import ChristmasTreePage from "./pages/ChristmasTreePage";
+import DilekEklePage from "./pages/DilekEklePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+import { ThemeProvider } from "@/components/ThemeContext";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <KioskLayout>
+      <ThemeProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/photo" element={<PhotoPage />} />
-            <Route path="/shared-photo" element={<SharedPhotoPage />} />
-            <Route path="/announcements" element={<AnnouncementsPage />} />
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/schedule" element={<SchedulePage />} />
-            <Route path="/faculty" element={<FacultyPage />} />
-            <Route path="/surveys" element={<SurveysPage />} />
-            <Route path="/surveys/:id" element={<SurveyDetailPage />} />
-            <Route path="/admin-login" element={<AdminLoginPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+            {/* Mobile/Standalone Routes */}
+            <Route path="/dilek-ekle" element={<DilekEklePage />} />
+
+            {/* Kiosk Routes */}
+            <Route
+              path="*"
+              element={
+                <KioskLayout>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/photo" element={<PhotoPage />} />
+                    <Route path="/shared-photo" element={<SharedPhotoPage />} />
+                    <Route path="/announcements" element={<AnnouncementsPage />} />
+                    <Route path="/map" element={<MapPage />} />
+                    <Route path="/schedule" element={<SchedulePage />} />
+                    <Route path="/faculty" element={<FacultyPage />} />
+                    <Route path="/surveys" element={<SurveysPage />} />
+                    <Route path="/surveys/:id" element={<SurveyDetailPage />} />
+                    <Route path="/admin-login" element={<AdminLoginPage />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/christmas-tree" element={<ChristmasTreePage />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </KioskLayout>
+              }
+            />
           </Routes>
-        </KioskLayout>
-      </BrowserRouter>
+        </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

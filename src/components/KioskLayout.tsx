@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { BottomNavigation } from './BottomNavigation';
-import OnScreenKeyboard from './OnScreenKeyboard';
+import { NewYearDecorations } from './NewYearDecorations';
 
 interface KioskLayoutProps {
   children: ReactNode;
@@ -9,13 +9,11 @@ interface KioskLayoutProps {
 export const KioskLayout = ({ children }: KioskLayoutProps) => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <NewYearDecorations />
       {/* Main Content Area */}
-      <main className="flex-1 pb-20 overflow-hidden">
+      <main className="flex-1 pb-20 overflow-hidden relative">
         {children}
       </main>
-      
-      {/* Global On-Screen Keyboard */}
-      <OnScreenKeyboard />
 
       {/* Bottom Navigation - Always visible */}
       <BottomNavigation />
