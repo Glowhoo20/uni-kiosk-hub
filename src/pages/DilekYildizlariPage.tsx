@@ -463,7 +463,7 @@ export default function DilekYildizlariPage() {
             </div>
 
             {/* Right Side Panel - QR Code & Details */}
-            <div className="absolute top-8 right-8 z-20 flex flex-col items-center space-y-6 w-80 pointer-events-none">
+            <div className="absolute top-8 right-2 z-20 flex flex-col items-center space-y-6 w-80 pointer-events-none">
                 {/* QR Code Card */}
                 <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border-2 border-white/20 shadow-2xl transform transition-transform duration-300 pointer-events-auto">
                     <div className="bg-white p-2 rounded-xl">

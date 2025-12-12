@@ -34,6 +34,7 @@ const App = () => (
           <Routes>
             {/* Mobile/Standalone Routes */}
             <Route path="/dilek-ekle" element={<DilekEklePage />} />
+            <Route path="/shared-photo" element={<SharedPhotoPage />} />
 
             {/* Kiosk Routes */}
             <Route
@@ -43,7 +44,6 @@ const App = () => (
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/photo" element={<PhotoPage />} />
-                    <Route path="/shared-photo" element={<SharedPhotoPage />} />
                     <Route path="/announcements" element={<AnnouncementsPage />} />
                     <Route path="/map" element={<MapPage />} />
                     <Route path="/schedule" element={<SchedulePage />} />
