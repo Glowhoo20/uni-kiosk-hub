@@ -6,11 +6,23 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export const NewYearManager = () => {
     const [isThemeActive, setIsThemeActive] = useState(false);
     const [wishes, setWishes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [wishToDelete, setWishToDelete] = useState<string | null>(null);
 
     useEffect(() => {
         fetchSettings();
@@ -67,6 +79,7 @@ export const NewYearManager = () => {
             toast.success("Dilek silindi");
             setWishes(wishes.filter(w => w.id !== id));
         }
+        setWishToDelete(null);
     };
 
     return (
@@ -113,13 +126,29 @@ export const NewYearManager = () => {
                                         <TableCell>{wish.message}</TableCell>
                                         <TableCell>{new Date(wish.created_at).toLocaleString('tr-TR')}</TableCell>
                                         <TableCell>
-                                            <Button
-                                                variant="destructive"
-                                                size="icon"
-                                                onClick={() => deleteWish(wish.id)}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button
+                                                        variant="destructive"
+                                                        size="icon"
+                                                        onClick={() => setWishToDelete(wish.id)}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Dileği silmek istediğine emin misin?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Bu işlem geri alınamaz. Dilek kalıcı olarak silinecektir.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel onClick={() => setWishToDelete(null)}>İptal</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => deleteWish(wish.id)}>Sil</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </TableCell>
                                     </TableRow>
                                 ))}

@@ -73,7 +73,7 @@ const AdminPanelContent = () => {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="announcements">Duyurular</TabsTrigger>
             <TabsTrigger value="surveys">Anketler</TabsTrigger>
             <TabsTrigger value="faculty">Öğretim Üyeleri</TabsTrigger>
