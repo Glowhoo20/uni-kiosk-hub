@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Sparkles, Send } from "lucide-react";
 
 const formSchema = z.object({
-    name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
+    name: z.string().optional(),
     message: z.string().min(2, "Mesaj en az 2 karakter olmalıdır").max(250, "Mesaj en fazla 250 karakter olabilir"),
     color: z.enum(["red", "gold", "green", "blue", "white", "purple", "orange"], {
         required_error: "Lütfen bir yıldız rengi seçin",
@@ -38,7 +38,7 @@ export default function DilekEklePage() {
         setIsSubmitting(true);
         try {
             const { error } = await supabase.from("wishes").insert({
-                name: values.name,
+                name: values.name || "Anonim",
                 message: values.message,
                 color: values.color,
             });
@@ -116,12 +116,17 @@ export default function DilekEklePage() {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 bg-slate-900/50 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="message"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Adın / Takma Adın</FormLabel>
+                                    <FormLabel>Yılbaşı notun</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Örn: Gizemli Noel Baba" className="bg-slate-950 border-slate-800" {...field} />
+                                        <Textarea
+                                            placeholder="Yeni yıldan beklentim..."
+                                            className="bg-slate-950 border-slate-800 resize-none h-32"
+                                            maxLength={250}
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -130,17 +135,14 @@ export default function DilekEklePage() {
 
                         <FormField
                             control={form.control}
-                            name="message"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Dileğin (Max 250 karakter)</FormLabel>
+                                    <FormLabel>
+                                        Adın Soyadın <span className="text-xs font-light text-slate-400 ml-1">(zorunlu değil)</span>
+                                    </FormLabel>
                                     <FormControl>
-                                        <Textarea
-                                            placeholder="Yeni yıldan beklentim..."
-                                            className="bg-slate-950 border-slate-800 resize-none h-32"
-                                            maxLength={250}
-                                            {...field}
-                                        />
+                                        <Input placeholder="Örn: Gizemli Noel Baba" className="bg-slate-950 border-slate-800" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
