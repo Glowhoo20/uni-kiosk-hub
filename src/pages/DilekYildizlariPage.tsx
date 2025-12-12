@@ -496,7 +496,7 @@ export default function DilekYildizlariPage() {
             </div>
 
             {/* Buttons - Bottom Left */}
-            <div className="absolute bottom-40 left-8 z-30 pointer-events-auto">
+            <div className="absolute bottom-28 left-8 z-30 pointer-events-auto">
                 <button
                     onClick={handleReadWish}
                     className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full backdrop-blur-md transition-all hover:scale-105 border border-white/20 font-semibold shadow-lg flex items-center gap-2 text-lg"
