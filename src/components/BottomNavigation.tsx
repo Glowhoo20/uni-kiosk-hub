@@ -118,12 +118,12 @@ export const BottomNavigation = () => {
         {isNewYearActive && (
           <div className="px-2">
             <button
-              onClick={() => navigate('/christmas-tree')}
+              onClick={() => navigate('/dilek-yildizlari')}
               className={cn(
                 "flex flex-col items-center justify-center p-3 rounded-full transition-all duration-200 min-h-[4rem] min-w-[4rem]",
                 "bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95",
                 "border-2 border-white/20",
-                location.pathname === '/christmas-tree' && "ring-4 ring-purple-400/30"
+                location.pathname === '/dilek-yildizlari' && "ring-4 ring-purple-400/30"
               )}
             >
               <Stars className="w-6 h-6 mb-1" />

@@ -512,6 +512,9 @@ export default function DilekYildizlariPage() {
                         Dilek Yıldızları
                     </span>
                 </h1>
+                <p className="text-xl text-white/80 font-medium ml-1 mt-2 tracking-wide drop-shadow-md">
+                    Toplam {wishes.length} Dilek
+                </p>
             </div>
         </div>
     );
