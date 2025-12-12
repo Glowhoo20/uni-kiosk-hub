@@ -12,9 +12,9 @@ import { Sparkles, Send } from "lucide-react";
 
 const formSchema = z.object({
     name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
-    message: z.string().min(2, "Mesaj en az 2 karakter olmalıdır").max(140, "Mesaj en fazla 140 karakter olabilir"),
-    color: z.enum(["red", "gold", "green", "blue", "white", "purple"], {
-        required_error: "Lütfen bir süs rengi seçin",
+    message: z.string().min(2, "Mesaj en az 2 karakter olmalıdır").max(250, "Mesaj en fazla 250 karakter olabilir"),
+    color: z.enum(["red", "gold", "green", "blue", "white", "purple", "orange"], {
+        required_error: "Lütfen bir yıldız rengi seçin",
     }),
 });
 
@@ -46,7 +46,7 @@ export default function DilekEklePage() {
             if (error) throw error;
 
             setIsSuccess(true);
-            toast.success("Dileğin ağaca asıldı!");
+            toast.success("Dileğin gökyüzüne gönderildi!");
         } catch (error) {
             console.error("Error submitting wish:", error);
             toast.error("Bir hata oluştu, lütfen tekrar dene.");
@@ -108,7 +108,7 @@ export default function DilekEklePage() {
                         Yılbaşı Dileği
                     </h1>
                     <p className="text-slate-400">
-                        Yeni yıl dileğini yaz, ağacımızı süsle!
+                        Yeni yıl dileğini yaz, gökyüzünü aydınlat!
                     </p>
                 </div>
 
@@ -133,12 +133,12 @@ export default function DilekEklePage() {
                             name="message"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Dileğin (Max 140 karakter)</FormLabel>
+                                    <FormLabel>Dileğin (Max 250 karakter)</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Yeni yıldan beklentim..."
                                             className="bg-slate-950 border-slate-800 resize-none h-32"
-                                            maxLength={140}
+                                            maxLength={250}
                                             {...field}
                                         />
                                     </FormControl>
@@ -152,7 +152,7 @@ export default function DilekEklePage() {
                             name="color"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Süs Rengi Seç</FormLabel>
+                                    <FormLabel>Yıldız Rengi Seç</FormLabel>
                                     <FormControl>
                                         <div className="flex flex-wrap gap-4 justify-center pt-2">
                                             {[
@@ -162,6 +162,7 @@ export default function DilekEklePage() {
                                                 { value: "blue", color: "bg-blue-500", label: "Mavi" },
                                                 { value: "white", color: "bg-white", label: "Beyaz" },
                                                 { value: "purple", color: "bg-purple-500", label: "Mor" },
+                                                { value: "orange", color: "bg-orange-500", label: "Turuncu" },
                                             ].map((option) => (
                                                 <div key={option.value} className="text-center space-y-2">
                                                     <button

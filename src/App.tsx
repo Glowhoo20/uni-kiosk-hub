@@ -16,7 +16,7 @@ import SurveyDetailPage from "./pages/SurveyDetailPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminPage from "./pages/AdminPage";
 
-import ChristmasTreePage from "./pages/ChristmasTreePage";
+import DilekYildizlariPage from "./pages/DilekYildizlariPage";
 import DilekEklePage from "./pages/DilekEklePage";
 import NotFound from "./pages/NotFound";
 
@@ -52,7 +52,7 @@ const App = () => (
                     <Route path="/surveys/:id" element={<SurveyDetailPage />} />
                     <Route path="/admin-login" element={<AdminLoginPage />} />
                     <Route path="/admin" element={<AdminPage />} />
-                    <Route path="/christmas-tree" element={<ChristmasTreePage />} />
+                    <Route path="/dilek-yildizlari" element={<DilekYildizlariPage />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>

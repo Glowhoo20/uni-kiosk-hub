@@ -170,6 +170,7 @@ const StarWish = ({
             case "green": return "#22c55e";
             case "blue": return "#3b82f6";
             case "purple": return "#a855f7";
+            case "orange": return "#f97316"; // Added orange
             default: return "#ffffff";
         }
     }, [color]);
@@ -270,7 +271,7 @@ const StarWish = ({
     );
 };
 
-export default function ChristmasTreePage() {
+export default function DilekYildizlariPage() {
     const [wishes, setWishes] = useState<Wish[]>([]);
     const [selectedWish, setSelectedWish] = useState<Wish | null>(null);
     const [focusTarget, setFocusTarget] = useState<[number, number, number] | null>(null);
@@ -357,7 +358,7 @@ export default function ChristmasTreePage() {
     }, []);
 
     const handleRandomWish = () => {
-        const colors = ["red", "gold", "green", "blue", "purple"];
+        const colors = ["red", "gold", "green", "blue", "purple", "orange"];
         const names = ["Ahmet", "Mehmet", "Ayşe", "Fatma", "Ali", "Veli", "Zeynep", "Can"];
         const messages = [
             "Mutlu Yıllar!",

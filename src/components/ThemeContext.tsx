@@ -3,28 +3,36 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface ThemeContextType {
     isNewYearTheme: boolean;
+    isLoading: boolean;
 }
 
-const ThemeContext = createContext<ThemeContextType>({ isNewYearTheme: false });
+const ThemeContext = createContext<ThemeContextType>({ isNewYearTheme: false, isLoading: true });
 
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     const [isNewYearTheme, setIsNewYearTheme] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         // Initial fetch
         const fetchSettings = async () => {
-            const { data } = await supabase
-                .from('app_settings' as any)
-                .select('value')
-                .eq('key', 'new_year_theme')
-                .single();
+            try {
+                const { data } = await supabase
+                    .from('app_settings' as any)
+                    .select('value')
+                    .eq('key', 'new_year_theme')
+                    .single();
 
-            if (data) {
-                const isActive = (data as any).value.isActive;
-                setIsNewYearTheme(isActive);
-                updateBodyClass(isActive);
+                if (data) {
+                    const isActive = (data as any).value.isActive;
+                    setIsNewYearTheme(isActive);
+                    updateBodyClass(isActive);
+                }
+            } catch (error) {
+                console.error('Error fetching theme settings:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchSettings();
@@ -64,7 +72,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <ThemeContext.Provider value={{ isNewYearTheme }}>
+        <ThemeContext.Provider value={{ isNewYearTheme, isLoading }}>
             {children}
         </ThemeContext.Provider>
     );

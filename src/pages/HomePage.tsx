@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { format, getDay } from 'date-fns';
 import { tr } from 'date-fns/locale';
+import { useTheme } from '@/components/ThemeContext';
 
 interface Announcement {
   id: string;
@@ -44,12 +45,19 @@ const stats = [
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { isNewYearTheme, isLoading: isThemeLoading } = useTheme();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [todayCourses, setTodayCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [coursesLoading, setCoursesLoading] = useState(true);
   const [currentDay, setCurrentDay] = useState('');
   const [selectedClass, setSelectedClass] = useState<number>(1);
+
+  useEffect(() => {
+    if (!isThemeLoading && isNewYearTheme) {
+      navigate('/dilek-yildizlari', { replace: true });
+    }
+  }, [isThemeLoading, isNewYearTheme, navigate]);
 
   useEffect(() => {
     // Bugünün gününü al
@@ -100,6 +108,10 @@ export default function HomePage() {
     }
   }, []);
 
+  if (isThemeLoading) {
+    return null; // or a loading spinner
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
       {/* Hero Section */}
@@ -108,9 +120,9 @@ export default function HomePage() {
           <div className="flex items-center justify-center gap-8">
             {/* Sol Logo */}
             <div className="hidden lg:block flex-shrink-0">
-              <img 
-                src="/deu.png" 
-                alt="DEÜ Logo" 
+              <img
+                src="/deu.png"
+                alt="DEÜ Logo"
                 className="h-32 w-32 object-contain"
               />
             </div>
@@ -124,22 +136,22 @@ export default function HomePage() {
                 Yönetim Bilişim Sistemleri
               </h2>
               <p className="text-xl opacity-80 max-w-2xl mx-auto">
-                İnteraktif kiosk sistemimize hoş geldiniz. Bölümümüz hakkında bilgi alın, 
+                İnteraktif kiosk sistemimize hoş geldiniz. Bölümümüz hakkında bilgi alın,
                 duyuruları takip edin ve hatıra fotoğraflarınızı çekin.
               </p>
             </div>
 
             {/* Sağ Logo */}
             <div className="hidden lg:block flex-shrink-0">
-              <img 
-                src="/deu-ybs-logo.png" 
-                alt="DEÜ YBS Logo" 
+              <img
+                src="/deu-ybs-logo.png"
+                alt="DEÜ YBS Logo"
                 className="h-32 w-32 object-contain"
               />
             </div>
           </div>
         </div>
-        
+
         {/* Decorative Elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-32 h-32 bg-white rounded-full blur-xl"></div>
@@ -191,7 +203,7 @@ export default function HomePage() {
                             .map((level) => {
                               const levelCourses = todayCourses.filter(c => c.class_level === level);
                               if (levelCourses.length === 0) return null;
-                              
+
                               return (
                                 <div key={level} className="border-l-4 border-primary pl-4">
                                   <div className="flex items-center gap-2 mb-3">
@@ -250,7 +262,7 @@ export default function HomePage() {
                   <h3 className="text-2xl font-bold text-primary mb-6">
                     Son Duyurular
                   </h3>
-                  
+
                   {loading ? (
                     <div className="text-center text-muted-foreground py-8">Yükleniyor...</div>
                   ) : announcements.length === 0 ? (
@@ -271,7 +283,7 @@ export default function HomePage() {
                           </div>
                         </div>
                       ))}
-                      
+
                       <div className="pt-4">
                         <Button
                           onClick={() => navigate('/announcements')}
@@ -312,7 +324,7 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-      
+
       {/* Admin Panel Access Button */}
       <div className="fixed bottom-4 right-4">
         <Button
