@@ -14,7 +14,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import MapManager from '@/components/admin/MapManager';
 import { NewYearManager } from '@/components/admin/NewYearManager';
-import { Camera, Sparkles } from 'lucide-react';
+import KioskStatusManager from '@/components/admin/KioskStatusManager';
+import { Camera, Sparkles, Activity } from 'lucide-react';
 
 const AdminPanelContent = () => {
   const [activeTab, setActiveTab] = useState('announcements');
@@ -81,6 +82,7 @@ const AdminPanelContent = () => {
             <TabsTrigger value="frames">Çerçeveler</TabsTrigger>
             <TabsTrigger value="map">Harita</TabsTrigger>
             <TabsTrigger value="photos">Fotoğraflar</TabsTrigger>
+            <TabsTrigger value="kiosk-status" className="flex gap-2"><Activity className="w-4 h-4" /> Kiosk Durumu</TabsTrigger>
             <TabsTrigger value="yeniyil" className="flex gap-2"><Sparkles className="w-4 h-4" /> Yeniyıl</TabsTrigger>
           </TabsList>
 
@@ -105,6 +107,9 @@ const AdminPanelContent = () => {
           </TabsContent>
           <TabsContent value="map" className="space-y-4">
             <MapManager />
+          </TabsContent>
+          <TabsContent value="kiosk-status" className="space-y-4">
+            <KioskStatusManager />
           </TabsContent>
           <TabsContent value="yeniyil" className="space-y-4">
             <NewYearManager />

@@ -197,6 +197,24 @@ export type Database = {
         }
         Relationships: []
       }
+      kiosk_heartbeats: {
+        Row: {
+          created_at: string
+          id: string
+          kiosk_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kiosk_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kiosk_id?: string
+        }
+        Relationships: []
+      }
       markers: {
         Row: {
           color: string | null
